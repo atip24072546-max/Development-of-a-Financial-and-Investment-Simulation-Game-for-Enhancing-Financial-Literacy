@@ -1,13 +1,8 @@
-"""
-main.py - ส่วนติดต่อผู้ใช้งาน (UI) สำหรับระบบจำลองการเงิน
-รองรับโครงสร้าง Streamlit UI 5 หน้าจอ และโหมดรันผ่าน Console
-"""
 import sys
 from game_engine import FinancialGameEngine, PlayerProfile
 from simulation import format_currency
 
 def run_cli():
-    """ฟังก์ชันสำหรับรันผ่าน Command Line Interface แบบเดิม"""
     print("-" * 100)
     print("          เริ่มต้นระบบจำลองการเงิน (CLI Mode)")
     print("-" * 100)
@@ -73,14 +68,6 @@ def run_cli():
     print("=" * 100)
 
 def run_streamlit():
-    """
-    โครงสร้างสำหรับรัน Streamlit UI 5 หน้าจอ:
-    - หน้า 1: กรอกข้อมูลผู้เล่น (Profile Input)
-    - หน้า 2: กำหนดเป้าหมายทางการเงิน (Financial Goals)
-    - หน้า 3: วิเคราะห์สภาพคล่องและความเสี่ยง (Financial Health Assessment)
-    - หน้า 4: หน้าจอจำลองการเดินเกมรายปีพร้อมแดชบอร์ด (Simulation Dashboard)
-    - หน้า 5: สรุปผลลัพธ์และความสำเร็จของแผนการเงิน (Summary & Report)
-    """
     try:
         import streamlit as st
     except ImportError:
