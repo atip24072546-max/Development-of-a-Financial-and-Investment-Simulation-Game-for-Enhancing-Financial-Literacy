@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมจำลองการเงินและการลงทุน</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+
+        <!-- ========== หน้า 1: ข้อมูลผู้เล่น ========== -->
+        {% if step == 1 %}
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">ข้อมูลผู้เล่น</h1>
+                <p class="card-subtitle">กรอกข้อมูลทางการเงินของคุณ เพื่อใช้วิเคราะห์และวางแผนการเงิน</p>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-warning">
+                <span class="alert-icon">⚠️</span> {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/goals">
+                <!-- อายุ (full width) -->
+                <div class="form-group">
+                    <label class="form-label" for="age">อายุ</label>
+                    <div class="input-wrapper">
+                        <input class="form-input" type="number" id="age" name="age"
+                               placeholder="กรุณากรอกอายุ" min="1" max="100" required>
+                        <span class="input-suffix">ปี</span>
+                    </div>
+                </div>
+
+                <!-- รายได้ + ค่าใช้จ่าย (2 คอลัมน์) -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="income">รายได้ต่อเดือน</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="number" id="income" name="income"
+                                   placeholder="กรุณากรอกรายได้" min="0" step="0.01" required>
+                            <span class="input-suffix">บาท/เดือน</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expenses">ค่าใช้จ่ายต่อเดือน</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="number" id="expenses" name="expenses"
+                                   placeholder="กรุณากรอกค่าใช้จ่าย" min="0" step="0.01" required>
+                            <span class="input-suffix">บาท/เดือน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- เงินออม + หนี้สิน (2 คอลัมน์) -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="savings">เงินออมปัจจุบัน</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="number" id="savings" name="savings"
+                                   placeholder="กรุณากรอกเงินออม" min="0" step="0.01" required>
+                            <span class="input-suffix">บาท</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="debt">หนี้สินคงเหลือ</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="number" id="debt" name="debt"
+                                   placeholder="กรุณากรอกหนี้สิน" min="0" step="0.01" required>
+                            <span class="input-suffix">บาท/เดือน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group btn-group-right">
+                    <button type="submit" class="btn btn-primary">ถัดไป: กำหนดเป้าหมาย</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+
+        <!-- ========== หน้า 2: เป้าหมายทางการเงิน ========== -->
+        {% if step == 2 %}
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">เป้าหมายทางการเงิน</h1>
+                <p class="card-subtitle">กำหนดระยะเวลาและเป้าหมายของคุณ เพื่อใช้วิเคราะห์และวางแผนการเงิน</p>
+            </div>
+
+            {% if error %}
+            <div class="alert alert-warning">
+                <span class="alert-icon">⚠️</span> {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/analyze">
+                <!-- อายุเกษียณ -->
+                <div class="form-group">
+                    <label class="form-label" for="retirement_age">อายุเกษียณ</label>
+                    <div class="input-wrapper">
+                        <input class="form-input" type="number" id="retirement_age" name="retirement_age"
+                               placeholder="กรุณากรอกอายุเกษียณ" min="1" max="100" required>
+                        <span class="input-suffix">ปี</span>
+                    </div>
+                </div>
+
+                <!-- เป้าหมายทางการเงิน (textarea) -->
+                <div class="form-group">
+                    <label class="form-label" for="target_wealth_text">เป้าหมายทางการเงิน</label>
+                    <textarea class="form-textarea" id="target_wealth_text" name="target_wealth_text"
+                              placeholder="กรุณาระบุเป้าหมายทางการเงินของคุณ" rows="4"></textarea>
+                    <p class="form-hint">เช่น มีเงินสำรองฉุกเฉิน ปลดหนี้ หรือเก็บเงินเพื่อเกษียณ ระบุได้มากกว่าหนึ่งเป้าหมาย</p>
+                </div>
+
+                <!-- ซ่อน input สำหรับ target_wealth จริง (ตัวเลข) และ duration -->
+                <input type="hidden" name="target_wealth" id="target_wealth" value="5000000">
+                <input type="hidden" name="duration" value="20">
+
+                <div class="btn-group btn-group-space">
+                    <a href="/" class="btn btn-outline">กลับ: ข้อมูลผู้เล่น</a>
+                    <button type="submit" class="btn btn-primary">วิเคราะห์สถานะทางการเงิน</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+
+        <!-- ========== หน้า 3: สถานะทางการเงิน ========== -->
+        {% if step == 3 %}
+        <div class="card card-wide">
+            <div class="card-header card-header-row">
+                <div>
+                    <h1 class="card-title">สถานะทางการเงิน</h1>
+                    <p class="card-subtitle">ภาพรวมการเงินปัจจุบันและความพร้อมต่อเป้าหมายของคุณ</p>
+                </div>
+                <div class="status-badge">
+                    <span class="status-icon">{% if health %}✅{% else %}🕐{% endif %}</span>
+                    <span class="status-text">{{ 'วิเคราะห์เสร็จสมบูรณ์' if health else 'รอข้อมูลเพื่อวิเคราะห์' }}</span>
+                </div>
+            </div>
+
+            <!-- Info Banner -->
+            <div class="alert alert-info">
+                <span class="alert-icon">ℹ️</span>
+                <div>
+                    <strong>ผลวิเคราะห์ประมวลผลจากข้อมูลของคุณแล้ว</strong><br>
+                    <span class="alert-sub">ระบบได้สรุปผลและประเมินระดับความเสี่ยงเพื่อเตรียมพร้อมก่อนเริ่มการจำลองลงทุน</span>
+                </div>
+            </div>
+
+            <!-- ภาพรวมการเงิน -->
+            <div class="section-title">ภาพรวมการเงิน</div>
+            <div class="kpi-grid kpi-grid-3">
+                <div class="kpi-card">
+                    <div class="kpi-label">รายได้ต่อเดือน</div>
+                    <div class="kpi-dash">{{ health.income if health else '—' }}</div>
+                    <div class="kpi-unit">บาท/เดือน</div>
+                    <div class="kpi-desc">แสดงจากข้อมูลรายได้ของคุณ</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ค่าใช้จ่ายต่อเดือน</div>
+                    <div class="kpi-dash">{{ health.expenses if health else '—' }}</div>
+                    <div class="kpi-unit">บาท/เดือน</div>
+                    <div class="kpi-desc">แสดงจากข้อมูลค่าใช้จ่ายของคุณ</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">เงินคงเหลือต่อเดือน</div>
+                    <div class="kpi-dash">{{ health.net_monthly if health else '—' }}</div>
+                    <div class="kpi-unit">บาท/เดือน</div>
+                    <div class="kpi-desc">รายได้ หัก ค่าใช้จ่ายต่อเดือน</div>
+                </div>
+            </div>
+
+            <div class="kpi-grid kpi-grid-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">เงินออมปัจจุบัน</div>
+                    <div class="kpi-dash">{{ health.savings if health else '—' }}</div>
+                    <div class="kpi-unit">บาท</div>
+                    <div class="kpi-desc">เงินออมเริ่มต้นที่บันทึกไว้</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">หนี้สินคงเหลือ</div>
+                    <div class="kpi-dash">{{ health.debt if health else '—' }}</div>
+                    <div class="kpi-unit">บาท</div>
+                    <div class="kpi-desc">หนี้สินตั้งต้นที่ต้องบริหาร</div>
+                </div>
+            </div>
+
+            <!-- ความพร้อมต่อเป้าหมาย -->
+            <div class="section-title mt-section">ความพร้อมต่อเป้าหมาย</div>
+            <div class="goal-grid">
+                <div class="goal-col">
+                    <div class="goal-item">
+                        <div class="goal-label">ระยะเวลาจำลอง</div>
+                        <div class="goal-value">{{ health.duration if health else '— ปี' }}</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-label">อายุเกษียณ</div>
+                        <div class="goal-value">{{ health.retirement_age if health else '— ปี' }}</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-label">เป้าหมายทางการเงิน</div>
+                        <div class="goal-value goal-value-sm">{{ health.target_text if health else '—' }}</div>
+                        <div class="goal-desc">เป้าหมายที่คุณระบุไว้</div>
+                    </div>
+                </div>
+                <div class="goal-col goal-summary-col">
+                    <div class="goal-summary-box">
+                        <div class="goal-summary-title">สรุปความพร้อม</div>
+                        <div class="goal-summary-status">{{ 'พร้อมเข้าสู่การจำลอง' if health else 'ยังไม่มีผลการวิเคราะห์' }}</div>
+                        <div class="goal-summary-desc">
+                            {% if health %}
+                            รองรับค่าใช้จ่ายฉุกเฉินได้ {{ health.emergency_months }} โดยมีสัดส่วนหนี้ต่อรายได้ DTI {{ health.dti }}
+                            {% else %}
+                            ระบบจะใช้ข้อมูลการเงินและเป้าหมายของคุณเพื่อสรุปความพร้อม เมื่อกรอกข้อมูลครบถ้วน
+                            {% endif %}
+                            <br><span class="goal-next">ขั้นตอนถัดไป: เริ่มต้นจำลองการลงทุน</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ประเมินความเสี่ยง -->
+            <div class="section-title mt-section">ประเมินความเสี่ยง</div>
+            <div class="alert alert-info">
+                <span class="alert-icon">ℹ️</span>
+                <div>
+                    <strong>ระบบประเมินความเสี่ยงจากข้อมูลของคุณเรียบร้อยแล้ว</strong><br>
+                    <span class="alert-sub">คำนวณจากอายุ เงินออม หนี้สิน และความสามารถในการลงทุนต่อปี</span>
+                </div>
+            </div>
+
+            <div class="kpi-grid kpi-grid-2">
+                <div class="kpi-card">
+                    <div class="kpi-label">เงินออมกับหนี้สิน</div>
+                    <div class="kpi-dash">{{ health.savings_to_debt if health else '—' }}</div>
+                    <div class="kpi-unit">สัดส่วน</div>
+                    <div class="kpi-desc">อัตราส่วนหนี้สินต่อรายได้ DTI: {{ health.dti if health else '—' }}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">ความพร้อมต่อเป้าหมาย</div>
+                    <div class="kpi-dash">{{ health.readiness_pct if health else '—' }}</div>
+                    <div class="kpi-unit">เปอร์เซ็นต์</div>
+                    <div class="kpi-desc">เงินสำรองฉุกเฉิน: {{ health.emergency_months if health else '—' }}</div>
+                </div>
+            </div>
+
+            <div class="risk-summary-box">
+                <div class="risk-summary-title">สรุปความเสี่ยง</div>
+                <div class="risk-summary-status">ระดับความเสี่ยงที่เหมาะสม: {{ health.risk_level if health else 'ยังไม่มีผลการประเมิน' }}</div>
+                <div class="risk-summary-desc">
+                    {% if health %}
+                    ความสามารถในการลงทุนต่อปี: <strong>{{ health.invest_capacity }}</strong> (คิดเป็น 60% ของกระแสเงินสดสุทธิรายปี)
+                    {% else %}
+                    ระบบจะแสดงระดับความเสี่ยงและคำแนะนำเมื่อกรอกข้อมูลครบถ้วน
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="btn-group btn-group-full mt-section">
+                <form method="POST" action="/step">
+                    <button type="submit" class="btn btn-primary btn-full">เริ่มลงทุน</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- ========== หน้า 4: แดชบอร์ดจำลองรายปี ========== -->
+        {% if step == 4 and snap %}
+        <div class="card card-wide">
+            <div class="card-header card-header-row">
+                <div>
+                    <h1 class="card-title">แดชบอร์ดการลงทุน</h1>
+                    <p class="card-subtitle">ปีที่ {{ snap.year }} — อายุ {{ snap.age }} ปี</p>
+                </div>
+                <div class="year-badge">ปีที่ {{ snap.year }}</div>
+            </div>
+
+            <div class="kpi-grid kpi-grid-3">
+                <div class="kpi-card kpi-card-green">
+                    <div class="kpi-label">💵 เงินสด</div>
+                    <div class="kpi-value">{{ snap.cash }}</div>
+                </div>
+                <div class="kpi-card kpi-card-blue">
+                    <div class="kpi-label">🏦 เงินออม</div>
+                    <div class="kpi-value">{{ snap.savings }}</div>
+                </div>
+                <div class="kpi-card kpi-card-purple">
+                    <div class="kpi-label">📈 เงินลงทุน</div>
+                    <div class="kpi-value">{{ snap.investments }}</div>
+                </div>
+            </div>
+
+            <div class="net-worth-section">
+                <div class="net-worth-label">มูลค่าความมั่งคั่งสุทธิ (Net Worth)</div>
+                <div class="net-worth-value">{{ snap.net_worth }}</div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-label">
+                    ความคืบหน้าสู่เป้าหมาย <span class="progress-pct">{{ snap.progress }}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: {{ snap.progress }}%;"></div>
+                </div>
+            </div>
+
+            {% if snap.is_retired %}
+            <div class="alert alert-success">🎉 ยินดีด้วย! คุณถึงอายุเกษียณในปีนี้แล้ว!</div>
+            {% endif %}
+
+            <div class="btn-group btn-group-space mt-section">
+                {% if not snap.is_finished %}
+                <form method="POST" action="/step" style="flex:1;">
+                    <button type="submit" class="btn btn-primary btn-full">⏩ ข้ามไปปีถัดไป</button>
+                </form>
+                {% endif %}
+                <form method="POST" action="/summary" style="flex:1;">
+                    <button type="submit" class="btn {% if snap.is_finished %}btn-primary{% else %}btn-outline{% endif %} btn-full">
+                        {% if snap.is_finished %}✅ ดูสรุปผล{% else %}⏹ หยุด & ดูสรุป{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- ========== หน้า 5: สรุปผล ========== -->
+        {% if step == 5 and summary %}
+        <div class="card card-wide">
+            <div class="card-header">
+                <h1 class="card-title">📋 สรุปผลการจำลองสถานะทางการเงิน</h1>
+                <p class="card-subtitle">ผลลัพธ์หลังจากจำลองทั้งหมด {{ summary.total_years }} ปี</p>
+            </div>
+
+            <div class="summary-list">
+                {% set rows = [
+                    ("📅 จำนวนปีที่จำลอง",  summary.total_years ~ " ปี"),
+                    ("🎂 อายุสิ้นสุด",      summary.final_age ~ " ปี"),
+                    ("💵 เงินสดคงเหลือ",    summary.cash),
+                    ("🏦 เงินออมสะสม",      summary.savings),
+                    ("📈 พอร์ตลงทุน",       summary.investments),
+                    ("📦 ทรัพย์สินรวม",     summary.assets),
+                    ("💳 หนี้สินคงเหลือ",   summary.debt),
+                    ("💰 ความมั่งคั่งสุทธิ", summary.net_worth),
+                    ("🎯 เป้าหมาย",         summary.target),
+                    ("📊 ความคืบหน้า",      summary.progress ~ "%")
+                ] %}
+                {% for label, value in rows %}
+                <div class="summary-row">
+                    <span class="summary-label">{{ label }}</span>
+                    <span class="summary-value">{{ value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if summary.goal_reached %}
+            <div class="result-box result-success">🏆 สำเร็จ! คุณบรรลุเป้าหมายความมั่งคั่งแล้ว!</div>
+            {% else %}
+            <div class="result-box result-fail">📌 ยังไม่ถึงเป้าหมาย — ลองปรับแผนแล้วเล่นใหม่!</div>
+            {% endif %}
+
+            <div class="btn-group btn-group-center mt-section">
+                <a href="/" class="btn btn-primary">🔄 เริ่มเกมใหม่</a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</body>
+</html>

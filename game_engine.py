@@ -6,8 +6,8 @@ import tiem
 
 class GameState(Enum):
     SETUP = "SETUP" 
-    SIMULATION = "SIMULATION"
-    RESULTS = "RESULTS"
+    RUNNING = "RUNNING"
+    FINISHED = "FINISHED"
 
 @dataclass
 class PlayerProfile:
@@ -38,7 +38,7 @@ class FinancialSnapshot:
 
 class FinancialGameEngine:
     def __init__(self, profile: PlayerProfile, use_dynamic_economy: bool = False):
-        self.proflie = profile
+        self.profile = profile
         self.state = GameState.SETUP
         self.current_year = 0
         self.current_age = profile.age
@@ -51,7 +51,7 @@ class FinancialGameEngine:
         )
         self.dti = simulation.calculate_dti(profile.debt, profile.income_monthly)
 
-        self.risk_level, self.base_return_rate = simulation.evaluate_risk_profile(
+        self.risk_level, self.base_return_rate = simulation.calculate_risk_profile(
             profile.age, profile.debt, self.dti
         )
         self.annual_invest_capacity = simulation.calculate_annual_invest_capacity(self.net_cashflow_annual)
@@ -63,8 +63,10 @@ class FinancialGameEngine:
         self.use_dynamic_economy = use_dynamic_economy
         self.economy_model = tiem.EconomyModel()
         self.history: List[FinancialSnapshot] = []
+
     def start_game(self):
         self.state = GameState.RUNNING
+
     def step_year(self) -> FinancialSnapshot:
         """รันการจำลองข้ามไป 1 ปี และบันทึกสถานะทางการเงิน"""
         if self.state != GameState.RUNNING:
@@ -111,5 +113,6 @@ class FinancialGameEngine:
         if self.current_year >= self.profile.sim_duration:
             self.state = GameState.FINISHED
         return snapshot
+
     def is_finished(self) -> bool:
         return self.state == GameState.FINISHED

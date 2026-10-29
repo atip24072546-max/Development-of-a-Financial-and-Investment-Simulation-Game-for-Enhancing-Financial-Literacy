@@ -3,9 +3,9 @@ from typing import Tuple
 def format_currency(amount: float) -> str:
     return f"{amount:,.2f} บาท"
 
-def calculate_cashflow(income_monthly: float,expenses_monthly: float) -> Tuple[float, float]:
+def calculate_cashflow(income_monthly: float, expenses_monthly: float) -> Tuple[float, float]:
     net_monthly = income_monthly - expenses_monthly
-    net_annual = net_monthly * 12
+    net_annual = net_monthly * 12.0
     return net_monthly, net_annual
 
 def calculate_emergency_fund_months(savings: float, expenses_monthly: float) -> float:
@@ -14,10 +14,10 @@ def calculate_emergency_fund_months(savings: float, expenses_monthly: float) -> 
     return savings / expenses_monthly
 
 def calculate_dti(debt: float, income_monthly: float) -> float:
-    annual_income = income_monthly * 12
+    annual_income = income_monthly * 12.0
     if annual_income <= 0:
         return 0.0
-    return (debt / annual_income) * 100
+    return (debt / annual_income) * 100.0
 
 def calculate_risk_profile(age: int, debt: float, dti: float) -> Tuple[str, float]:
     if age < 35 and debt == 0:
@@ -31,13 +31,16 @@ def calculate_risk_profile(age: int, debt: float, dti: float) -> Tuple[str, floa
         expected_return_rate = 0.03
     return risk_level, expected_return_rate
 
+# ให้ใช้ได้ทั้งสองชื่อ
+evaluate_risk_profile = calculate_risk_profile
+
 def calculate_annual_invest_capacity(net_cashflow_annual: float) -> float:
     return max(0.0, net_cashflow_annual * 0.6)
 
-def calculate_debt_repayment(debt: float, net_cashflow_annual: float) -> float:
+def calculate_debt_repayment(debt: float, net_cashflow_annual: float) -> Tuple[float, float]:
     if debt <= 0:
-        return 0.0
-    repayment = min(debt,net_cashflow_annual * 0.5)
+        return 0.0, 0.0
+    repayment = min(debt, net_cashflow_annual * 0.5)
     remaining_debt = debt - repayment
     return repayment, remaining_debt
 
@@ -55,7 +58,7 @@ def calculate_assets_and_net_worth(cash: float, savings: float, investments: flo
 def calculate_goal_progress(net_worth: float, target_wealth: float) -> float:
     if target_wealth <= 0:
         return 0.0
-    return min(100.0, (net_worth / target_wealth) * 100)
+    return min(100.0, (net_worth / target_wealth) * 100.0)
 
 def calculate_capm(risk_free_rate: float, beta: float, market_return: float) -> float:
     return risk_free_rate + beta * (market_return - risk_free_rate)

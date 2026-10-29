@@ -1,0 +1,644 @@
+/* ============================================
+   style.css — Financial Simulation Game UI
+   ตามแบบจากรูป: Light Theme, Clean & Minimal
+   ============================================ */
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f5f5f7;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --border-input: #cbd5e1;
+    --text-primary: #1a1a2e;
+    --text-secondary: #64748b;
+    --text-hint: #94a3b8;
+    --blue: #3b6ef5;
+    --blue-hover: #2554d4;
+    --blue-light: #eff4ff;
+    --blue-border: #c7d7fd;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --purple: #7c3aed;
+    --orange: #ea580c;
+    --radius-card: 16px;
+    --radius-input: 10px;
+    --radius-btn: 10px;
+    --shadow-card: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+body {
+    font-family: 'Noto Sans Thai', 'Prompt', 'Segoe UI', Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    line-height: 1.6;
+}
+
+/* ===== PAGE WRAPPER ===== */
+.page-wrapper {
+    width: 100%;
+    max-width: 860px;
+}
+
+/* ===== CARD ===== */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    padding: 40px 48px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border);
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.card-wide {
+    max-width: 860px;
+}
+
+.card-header {
+    margin-bottom: 28px;
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* ===== STATUS BADGE (หน้า 3) ===== */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.alert-info {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    color: #1e40af;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+}
+
+.alert-success {
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+    color: var(--green);
+    font-weight: 600;
+    font-size: 1rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.alert-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.alert-sub {
+    color: inherit;
+    opacity: 0.8;
+    font-size: 0.85rem;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 80px 12px 16px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-input);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.form-input::placeholder {
+    color: var(--text-hint);
+}
+
+.form-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59, 110, 245, 0.12);
+}
+
+.input-suffix {
+    position: absolute;
+    right: 14px;
+    font-size: 0.82rem;
+    color: var(--text-hint);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-input);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: #fff;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+}
+
+.form-textarea::placeholder {
+    color: var(--text-hint);
+}
+
+.form-textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59, 110, 245, 0.12);
+}
+
+.form-hint {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--text-hint);
+}
+
+/* ===== FORM ROW (2 columns) ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+}
+
+.btn-group-right {
+    justify-content: flex-end;
+}
+
+.btn-group-center {
+    justify-content: center;
+}
+
+.btn-group-space {
+    justify-content: space-between;
+}
+
+.btn-group-full form {
+    width: 100%;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(59, 110, 245, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--blue-hover);
+    box-shadow: 0 4px 14px rgba(59, 110, 245, 0.35);
+}
+
+.btn-outline {
+    background: #fff;
+    color: var(--text-primary);
+    border: 1px solid var(--border-input);
+}
+
+.btn-outline:hover {
+    background: var(--bg);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.mt-section {
+    margin-top: 32px;
+}
+
+/* ===== KPI GRID ===== */
+.kpi-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.kpi-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.kpi-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.kpi-label {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.kpi-dash {
+    font-size: 1.2rem;
+    color: var(--text-hint);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.kpi-unit {
+    font-size: 0.8rem;
+    color: var(--text-hint);
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.kpi-desc {
+    font-size: 0.75rem;
+    color: var(--text-hint);
+    margin-top: 4px;
+}
+
+/* KPI card สี */
+.kpi-card-green .kpi-value { color: var(--green); }
+.kpi-card-blue  .kpi-value { color: var(--blue); }
+.kpi-card-purple .kpi-value { color: var(--purple); }
+
+/* ===== GOAL SECTION (หน้า 3) ===== */
+.goal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 8px;
+}
+
+.goal-item {
+    margin-bottom: 20px;
+}
+
+.goal-label {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.goal-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-hint);
+}
+
+.goal-value-sm {
+    font-size: 0.95rem;
+}
+
+.goal-desc {
+    font-size: 0.75rem;
+    color: var(--text-hint);
+    margin-top: 2px;
+}
+
+.goal-summary-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+}
+
+.goal-summary-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.goal-summary-status {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.goal-summary-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.goal-next {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ===== RISK SECTION ===== */
+.risk-summary-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.risk-summary-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.risk-summary-status {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.risk-summary-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* ===== NET WORTH SECTION (หน้า 4) ===== */
+.net-worth-section {
+    text-align: center;
+    padding: 24px;
+    border-radius: 12px;
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+    margin: 20px 0;
+}
+
+.net-worth-label {
+    font-size: 0.85rem;
+    color: #166534;
+    margin-bottom: 6px;
+}
+
+.net-worth-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--green);
+}
+
+/* ===== PROGRESS BAR (หน้า 4) ===== */
+.progress-section {
+    margin: 20px 0;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.progress-pct {
+    font-weight: 700;
+    color: var(--blue);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: var(--border);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), #60a5fa);
+    border-radius: 50px;
+    transition: width 0.5s ease;
+}
+
+/* ===== YEAR BADGE (หน้า 4) ===== */
+.year-badge {
+    padding: 8px 20px;
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--blue);
+}
+
+/* ===== SUMMARY LIST (หน้า 5) ===== */
+.summary-list {
+    margin: 8px 0 24px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    color: var(--text-secondary);
+}
+
+.summary-value {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ===== RESULT BOX (หน้า 5) ===== */
+.result-box {
+    padding: 20px 28px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.result-success {
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+    color: var(--green);
+}
+
+.result-fail {
+    background: var(--red-light);
+    border: 1px solid #fecaca;
+    color: var(--red);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    .card {
+        padding: 24px 20px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .goal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-header-row {
+        flex-direction: column;
+    }
+
+    .btn-group-space {
+        flex-direction: column;
+    }
+
+    .net-worth-value {
+        font-size: 1.5rem;
+    }
+}
